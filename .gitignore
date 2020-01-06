@@ -1,7 +1,9 @@
 *.class
 *.log
-.idea/.gitignore
-.idea/libraries/
+.idea/
+.idea/*
+.idea/codeStyles
+.idea/libraries
 project/build.properties
 project/target/config-classes/$207513bb3c7c1e2cde8c.cache
 project/target/config-classes/$4d6e4b66943c7159642f.cache
@@ -11,3 +13,4 @@ project/target/config-classes/$c93e7ba99f5238db9fcc.cache
 project/target/scala-2.12/
 project/target/streams/
 target/
+src/test/
