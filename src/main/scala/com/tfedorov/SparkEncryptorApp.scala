@@ -7,7 +7,10 @@ import org.apache.spark.internal.Logging
 import org.apache.spark.sql.SparkSession
 
 object SparkEncryptorApp extends App with Logging {
-  log.info("Start")
+
+  log.warn("*******Start*******")
+  private val targetPath = args.headOption
+  log.warn("Trying to save into " + targetPath)
 
   private val session = SparkSession.builder.
     master("local")
@@ -20,24 +23,26 @@ object SparkEncryptorApp extends App with Logging {
 
   private val input = (' ' to '~').map(_.toString)
 
-  val inputRDD = sc.parallelize(input)
+  private val inputRDD = sc.parallelize(input)
 
-  val keysRDD = inputRDD.cartesian(inputRDD).map(t => t._1 + t._2)
+  private val keysRDD = inputRDD.cartesian(inputRDD).map(t => t._1 + t._2)
     .cartesian(inputRDD).map(t => t._1 + t._2)
-    //.cartesian(inputRDD).map(t => t._1 + t._2)
-    //.cartesian(inputRDD).map(t => t._1 + t._2)
-    //.cartesian(inputRDD).map(t => t._1 + t._2)
+  //.cartesian(inputRDD).map(t => t._1 + t._2)
+  //.cartesian(inputRDD).map(t => t._1 + t._2)
+  //.cartesian(inputRDD).map(t => t._1 + t._2)
 
-  println(keysRDD.count())
+  //println(keysRDD.count())
 
-  val result = keysRDD.map { key =>
+  private val resultRDD = keysRDD.map { key =>
     val messageDigest = md.digest(key.getBytes())
     val no = new BigInteger(1, messageDigest)
-    val hashtext = no.toString(16)
-    (hashtext, key)
-  }.sortByKey().count() ///.take(100).foreach(println)
+    val hashText = no.toString(16)
+    (hashText, key)
+  }.sortByKey()
 
-  println(result)
+  targetPath
+    .map(path => resultRDD.saveAsTextFile(path))
+    .getOrElse(resultRDD.take(100).foreach(println))
 
-  log.info("End")
+  log.warn("*******End*******")
 }
