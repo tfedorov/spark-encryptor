@@ -12,8 +12,7 @@ object SparkEncryptorApp extends App with Logging {
   private val targetPath = args.headOption
   log.warn("Trying to save into " + targetPath)
 
-  private val session = SparkSession.builder.
-    master("local")
+  private val session = SparkSession.builder//.master("local")
     .appName(this.getClass.getCanonicalName)
     .getOrCreate()
 
