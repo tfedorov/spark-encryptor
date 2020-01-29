@@ -3,6 +3,7 @@ package com.tfedorov
 import java.math.BigInteger
 import java.security.MessageDigest
 
+import com.tfedorov.SparkSqlApp.session
 import org.apache.spark.internal.Logging
 import org.apache.spark.sql.SparkSession
 
@@ -12,11 +13,13 @@ object SparkEncryptorApp extends App with Logging {
   private val targetPath = args.headOption
   log.warn("Trying to save into " + targetPath)
 
-  private val session = SparkSession.builder//.master("local")
+  private val session = SparkSession.builder.master("local")
     .appName(this.getClass.getCanonicalName)
     .getOrCreate()
 
   private val sc = session.sparkContext
+
+  import session.implicits._
 
   private val md = MessageDigest.getInstance("MD5")
 
@@ -40,7 +43,7 @@ object SparkEncryptorApp extends App with Logging {
   }.sortByKey()
 
   targetPath
-    .map(path => resultRDD.saveAsTextFile(path))
+    .map(path => resultRDD.toDF("code", "key").write.parquet(path))
     .getOrElse(resultRDD.take(100).foreach(println))
 
   log.warn("*******End*******")

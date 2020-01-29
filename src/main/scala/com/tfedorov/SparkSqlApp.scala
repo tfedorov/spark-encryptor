@@ -13,11 +13,9 @@ object SparkSqlApp extends App with Logging {
     .appName(this.getClass.getCanonicalName)
     .getOrCreate()
 
-  import session.implicits._
-
   val inputDF = session
     .read
-    .parquet("C:\\work\\workspace\\private\\spark-encryptor\\src\\main\\resources\\data\\tr2")
+    .parquet(".\\src\\main\\resources\\data\\tr2")
     .toDF("hash", "value")
 
   //val resultDF = inputDF.sort("value").filter($"value".contains("A"))
