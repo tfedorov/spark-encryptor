@@ -1,3 +1,6 @@
+import sbt.Keys._
+import sbt._
+
 name := "spark_encryptor"
 
 version := "0.1"
@@ -18,3 +21,12 @@ val sparkDependencies: Seq[ModuleID] = sparkLocal match {
 }
 
 libraryDependencies ++= sparkDependencies
+
+lazy val manifestSettings = Seq(
+  packageOptions in(Compile, packageBin) +=
+    Package.ManifestAttributes(
+      "git_last_commit" -> git.gitHeadCommit.value.toString,
+      "git_last_message" -> git.gitHeadMessage.value.toString.replaceAll("\n", ""))
+)
+
+lazy val root = Project(id = "root", base = file(".")).settings(manifestSettings: _*)

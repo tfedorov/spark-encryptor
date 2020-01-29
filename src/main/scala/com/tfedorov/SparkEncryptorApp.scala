@@ -3,7 +3,7 @@ package com.tfedorov
 import java.math.BigInteger
 import java.security.MessageDigest
 
-import com.tfedorov.SparkSqlApp.session
+`import com.tfedorov.utils.FilesUtils
 import org.apache.spark.internal.Logging
 import org.apache.spark.sql.SparkSession
 
@@ -13,6 +13,7 @@ object SparkEncryptorApp extends App with Logging {
   private val targetPath = args.headOption
   log.warn("Trying to save into " + targetPath)
 
+  log.warn(FilesUtils.manifestMF)
   private val session = SparkSession.builder.master("local")
     .appName(this.getClass.getCanonicalName)
     .getOrCreate()
