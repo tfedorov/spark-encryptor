@@ -22,6 +22,11 @@ val sparkDependencies: Seq[ModuleID] = sparkLocal match {
 
 libraryDependencies ++= sparkDependencies
 
+assemblyMergeStrategy in assembly := {
+  case PathList("META-INF", xs@_*) => MergeStrategy.discard
+  case _ => MergeStrategy.first
+}
+
 lazy val manifestSettings = Seq(
   packageOptions in(Compile, packageBin) +=
     Package.ManifestAttributes(
