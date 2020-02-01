@@ -7,11 +7,13 @@ import com.tfedorov.utils.FilesUtils
 import org.apache.spark.internal.Logging
 import org.apache.spark.sql.SparkSession
 
-object SparkEncryptorApp extends App with Logging {
+object DataCreatorApp extends App with Logging {
 
   log.warn("*******Start*******")
   private val targetPath = args.headOption
   log.warn("Trying to save into " + targetPath)
+  if (targetPath.isEmpty)
+    System.exit(0)
 
   log.warn(FilesUtils.manifestMF)
   private val session = SparkSession.builder.master("local")
@@ -24,7 +26,7 @@ object SparkEncryptorApp extends App with Logging {
 
   private val md = MessageDigest.getInstance("MD5")
 
-  private val input = (' ' to '~').map(_.toString)
+  private val input = ('a' to 'z').map(_.toString)
 
   private val inputRDD = sc.parallelize(input)
 
