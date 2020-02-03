@@ -14,3 +14,7 @@ project/target/scala-2.12/
 project/target/streams/
 target/
 src/test/
+src/main/resources/data
+/build
+/gradle
+/.gradle

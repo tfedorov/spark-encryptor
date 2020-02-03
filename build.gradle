@@ -18,6 +18,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'org.apache.spark:spark-sql_2.11:2.4.4'
     compile group: 'org.scala-lang', name: 'scala-library', version: '2.11.11'
+    compile group: 'postgresql', name: 'postgresql', version: '9.1-901-1.jdbc4'
 }
 
 repositories {
