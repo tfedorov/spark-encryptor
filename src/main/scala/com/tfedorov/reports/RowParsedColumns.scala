@@ -1,0 +1,21 @@
+package main.scala.com.tfedorov.reports
+
+case class RowParsedColumns(marketCode: String,
+                            callLetter: String,
+                            commercialDate: String,
+                            commercialTime: String,
+                            commercialDescription: String,
+                            showTitle: String,
+                            showTypeDescription: String,
+                            dayPart: String,
+                            ultimateParentDesc: String,
+                            parentDesc: String,
+                            brandDesc: String,
+                            pccDesc: String,
+                            commercialDuration: String,
+                            expenditure: String,
+                            podNumber: String,
+                            podSequence: String,
+                            commercialTrafficType: String,
+                            brandVariantDesc: String,
+                            maxSequenceWithinPod: String)
