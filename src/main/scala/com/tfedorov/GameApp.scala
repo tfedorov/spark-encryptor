@@ -2,7 +2,7 @@ package com.tfedorov
 
 
 import org.apache.spark.internal.Logging
-import org.apache.spark.sql.{DataFrameStatFunctions, Dataset, Row, SparkSession}
+import org.apache.spark.sql.{Dataset, Row, SparkSession}
 
 import scala.io.StdIn
 
@@ -36,8 +36,8 @@ object GameApp extends App with Logging {
 
   import spark.implicits._
 
-  val dsP1: Dataset[Player1Step] = spark.createDataset(createAllPlayer1(20)).filter(_.sum == 20)
-  val dsP2: Dataset[Row] = spark.createDataset(createAllPlayer1(20))
+  val player1DS: Dataset[Player1Step] = spark.createDataset(createAllPlayer1(20)).filter(_.sum == 20)
+  val player2DS: Dataset[Row] = spark.createDataset(createAllPlayer1(20))
     .filter(_.sum == 20)
     .withColumnRenamed("field1", "field1P2")
     .withColumnRenamed("field2", "field2P2")
@@ -45,20 +45,25 @@ object GameApp extends App with Logging {
 
   import org.apache.spark.sql.functions._
 
-  val gamesDF = dsP1.crossJoin(dsP2).withColumn("result", signum($"field1" - $"field1P2") + signum($"field2" - $"field2P2") + signum($"field3" - $"field3P2"))
-  gamesDF.show
-  gamesDF.explain()
+  val gamesDF = player1DS.crossJoin(player2DS).withColumn("result", signum($"field1" - $"field1P2") + signum($"field2" - $"field2P2") + signum($"field3" - $"field3P2"))
+  //gamesDF.show
+  //gamesDF.explain(true)
 
   gamesDF.createOrReplaceTempView("game")
 
   //val gameGroupedDF = spark.sql("SELECT result, field1, count(*) AS numOfGames FROM game WHERE result > 0 GROUP BY result, field1 ORDER BY numOfGames DESC")
-  val gameGroupedDF = spark.sql("SELECT result, field1, field2, field3, count(*) AS numOfGames FROM game WHERE result > 0 GROUP BY result, field1, field2, field3  ORDER BY numOfGames DESC")
-  gameGroupedDF.show
+  val groupSQL =
+    """SELECT (case when result = 1.0 then 'win' when result = 1.0 then 'lost' else 'draft' end) AS gameResult, field1, field2, field3, count(*) AS numOfGames
+      |  FROM game
+      |WHERE result > 0
+      |GROUP BY result, field1, field2, field3
+      |ORDER BY numOfGames DESC""".stripMargin
+  val gameGroupedDF = spark.sql(groupSQL)
+  //gameGroupedDF.show
 
-   gameGroupedDF.summary().show()
+  //gameGroupedDF.summary().show()
   //gamesDF.where($"field1" === 7).where($"field2" === 6).where($"field3"===7).agg(sum("result")).show
-  //gameGroupedDF.explain()
-  println("Press RETURN to stop...")
-  StdIn.readLine()
+  gameGroupedDF.explain(true)
+
   log.warn("*******End*******")
 }
