@@ -1,4 +1,4 @@
-package com.tfedorov
+package com.tfedorov.encrypt
 
 import java.security.MessageDigest
 
@@ -21,8 +21,6 @@ object DictionaryApp extends App with Logging {
   private val sc = session.sparkContext
 
   import session.implicits._
-
-  private val md = MessageDigest.getInstance("MD5")
 
   private val input = Seq(("abc", "cool"), ("cba", "zeba"), ("ccc", "clab"), ("aac", "coal"), ("caa", "zeaa"), ("cac", "caab"))
 

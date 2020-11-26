@@ -1,4 +1,4 @@
-package com.tfedorov
+package com.tfedorov.encrypt
 
 import java.math.BigInteger
 import java.security.MessageDigest
@@ -11,10 +11,6 @@ object DataCreatorApp extends App with Logging {
 
   log.warn("*******Start*******")
   private val targetPath = args.headOption
-  /*
-  log.warn("Trying to save into " + targetPath)
-  if (targetPath.isEmpty)
-    System.exit(0)*/
 
   log.warn(FilesUtils.manifestMF)
   private val session = SparkSession.builder.master("local")

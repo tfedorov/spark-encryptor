@@ -6,7 +6,7 @@ import org.apache.spark.sql.SparkSession
 
 import scala.io.StdIn
 
-object ExperimentApp extends App with Logging {
+object ExplainShowApp extends App with Logging {
 
   log.warn("*******Start : " + this.getClass.getCanonicalName + "*******")
 
