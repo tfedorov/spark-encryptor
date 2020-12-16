@@ -14,7 +14,7 @@ object ComparisonToolApp extends App {
   import spark.sqlContext.implicits._
 
   val originalDS = spark.read.option("header", "true").option("inferschema", "true")
-    .csv("/Users/tfedorov/IdeaProjects/spark-encryptor/src/main/resources/duke/customers.txt")
+    .csv("/Users/tfedorov/IdeaProjects/spark-encryptor/src/main/resources/compar/customers.txt")
 
   originalDS.printSchema()
   //originalDS.show()
