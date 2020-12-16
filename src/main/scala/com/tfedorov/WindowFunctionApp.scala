@@ -6,7 +6,7 @@ import scala.io.StdIn
 
 object WindowFunctionApp extends App {
 
-  case class Values(city: String, name: String, values: Int)
+  private case class Values(city: String, name: String, values: Int)
 
   private val spark =
     SparkSession.builder.master("local")
@@ -26,7 +26,7 @@ object WindowFunctionApp extends App {
     Values("Kyiv", "Ivan", 1)
   )
 
-  val valuesDS: Dataset[Values] = spark.createDataset(valueses)
+  private val valuesDS: Dataset[Values] = spark.createDataset(valueses)
 
   valuesDS.createTempView("vals")
 
@@ -34,8 +34,8 @@ object WindowFunctionApp extends App {
   import org.apache.spark.sql.functions._
 
   //val actualDS = spark.sql("SELECT * FROM (SELECT *, rank() OVER (PARTITION BY city ORDER BY values DESC) AS rank FROM vals) WHERE rank < 3")
-  val byBucket = Window.partitionBy('city, 'name).orderBy('values)
-  val dslResult = valuesDS
+  private val byBucket = Window.partitionBy('city, 'name).orderBy('values)
+  private val dslResult = valuesDS
     .withColumn("rank", rank().over(byBucket)) //.filter($"rank" < 3)
   dslResult.show
   dslResult.explain(true)

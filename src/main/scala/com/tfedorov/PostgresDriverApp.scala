@@ -1,4 +1,4 @@
-package main.scala.com.tfedorov
+package com.tfedorov
 
 import org.apache.spark.internal.Logging
 import org.apache.spark.sql.{DataFrame, SparkSession}
@@ -15,7 +15,7 @@ object PostgresDriverApp extends App with Logging {
     .appName(this.getClass.getCanonicalName)
     .getOrCreate()
 
- val input: DataFrame =  session.read.format("jdbc")
+  private val input: DataFrame =  session.read.format("jdbc")
     .option("url", "jdbc:postgresql://localhost/tmp?user=postgres&password=Ckfdf1")
     .option("query", "select hash, value from tmp.tmp_table")
     .load()

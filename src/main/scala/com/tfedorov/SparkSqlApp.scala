@@ -21,14 +21,14 @@ object SparkSqlApp extends App with Logging {
 
   import session.implicits._
 
-  val inputDF = session
+  private val inputDF = session
     .read
     .parquet(dataPath.get)
     .toDF("hash", "value")
 
-  val dictionaryDF = session.read.json(dictPath.get).toDF("des", "key")
+  private val dictionaryDF = session.read.json(dictPath.get).toDF("des", "key")
 
-  val resultDF = inputDF.join(dictionaryDF).where($"value" === $"key").select("hash", "des")
+  private val resultDF = inputDF.join(dictionaryDF).where($"value" === $"key").select("hash", "des")
   resultDF.show
   println("--------------------------")
   resultDF.explain(true)

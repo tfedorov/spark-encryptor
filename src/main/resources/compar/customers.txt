@@ -1,0 +1,9 @@
+id,val1,val2,meta
+1,15,222,Original
+4,19,44,New
+2,152,122,Original
+2,152,122,Original
+1,15,122,New
+2,5,122,New
+3,99,54,Original
+4,199,5444,Original

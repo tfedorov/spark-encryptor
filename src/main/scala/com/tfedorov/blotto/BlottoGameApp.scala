@@ -33,7 +33,6 @@ object BlottoGameApp extends App with Logging {
   val gamesGrouped = gamesDF.groupBy("player1.field1", "player1.field2", "player1.field3", "player1.field4")
     .agg(count("*").as("all"), sum("result").as("general"))
     .orderBy($"general".desc)
-  gamesGrouped.show
   gamesGrouped.explain(true)
 
   log.warn("*******End*******")
