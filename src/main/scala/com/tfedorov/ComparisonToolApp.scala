@@ -13,15 +13,15 @@ object ComparisonToolApp extends App {
   import org.apache.spark.sql.functions._
   import spark.sqlContext.implicits._
 
-  val originalDS = spark.read.option("header", "true").option("inferschema", "true")
-    .csv("/Users/tfedorov/IdeaProjects/spark-encryptor/src/main/resources/compar/customers.txt")
+  private val originalDS = spark.read.option("header", "true").option("inferschema", "true")
+    .csv("src/main/resources/compar/customers.csv")
 
   originalDS.printSchema()
   //originalDS.show()
   //originalDS.groupBy($"zip_code").agg(max("customer_id")).show
 
-  val part = Window.partitionBy($"id")
-  val result = originalDS.withColumn("number", count("*").over(part))
+  private val part = Window.partitionBy($"id")
+  private val result = originalDS.withColumn("number", count("*").over(part))
     //.filter($"number" === 2)
     .withColumn("diff", collect_set("val1").over(part))
     .withColumn("different", size($"diff"))
