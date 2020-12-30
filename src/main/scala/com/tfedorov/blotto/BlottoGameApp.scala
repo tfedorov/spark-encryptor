@@ -10,7 +10,7 @@ object BlottoGameApp extends App with Logging {
   private final val NUMBER_OF_CHIPS = 25
 
   private val spark =
-    SparkSession.builder.master("local")
+    SparkSession.builder //.master("local")
       .appName(this.getClass.getCanonicalName)
       .getOrCreate()
 
@@ -34,6 +34,8 @@ object BlottoGameApp extends App with Logging {
     .agg(count("*").as("all"), sum("result").as("general"))
     .orderBy($"general".desc)
   gamesGrouped.explain(true)
+
+  gamesGrouped.show()
 
   log.warn("*******End*******")
 }

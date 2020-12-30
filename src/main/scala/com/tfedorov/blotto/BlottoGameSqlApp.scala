@@ -9,7 +9,7 @@ object BlottoGameSqlApp extends App with Logging {
   private final val NUMBER_OF_CHIPS = 25
 
   private val spark =
-    SparkSession.builder.master("local")
+    SparkSession.builder//.master("local")
       .appName(this.getClass.getCanonicalName)
       .getOrCreate()
 
@@ -60,10 +60,10 @@ object BlottoGameSqlApp extends App with Logging {
       |ORDER BY general DESC
       |""".stripMargin
   val gameGroupedDF = spark.sql(groupSQL)
-  gameGroupedDF.show
 
   gameGroupedDF.explain(true)
   gameGroupedDF.summary().show()
+  gameGroupedDF.show
 
   log.warn("*******End*******")
 }

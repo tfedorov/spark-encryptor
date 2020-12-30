@@ -19,8 +19,7 @@ object ReadCSVApp extends App {
 
   private val table1DF = session.read.option("header", "true").option("inferschema", "true")
     .csv("src/main/resources/compar/table1.csv")
-    .repartition(3, partitionExprs = 'id)
-
+    .repartition(2, partitionExprs = 'id)
   //  table1DF.printSchema()
   //println(table1DF.rdd.getNumPartitions)
   // table1DF.createTempView("table1")
@@ -34,11 +33,12 @@ object ReadCSVApp extends App {
   //println(table2DF.rdd.getNumPartitions)
   //  table2DF.write.option("header", "true").csv("/Users/tfedorov/IdeaProjects/tmp/t2")
   private val joinedDF = table1DF.join(table2DF, table1DF("table2_id") === table2DF("id"))
+  joinedDF.explain()
   //joinedDF.show
   private val resultDF = joinedDF.groupBy("cat_value").agg(sum("val2"))
   //resultDF.explain()
-  resultDF.show
+  //resultDF.show
 
 
-  StdIn.readLine()
+  //StdIn.readLine()
 }

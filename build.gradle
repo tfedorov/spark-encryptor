@@ -7,7 +7,7 @@ version '1.0-SNAPSHOT'
 
 sourceSets {
     main {
-        scala.srcDirs = ['src']
+        scala.srcDirs = ['src/main/scala']
     }
     test {
         scala.srcDirs = ['test']
@@ -15,9 +15,10 @@ sourceSets {
 }
 // gradle - plugins to what are dependencies
 dependencies {
+    compile group: 'org.scala-lang', name: 'scala-library', version: '2.12.12'
     compile 'com.google.code.gson:gson:2.8.0'
-    compile 'org.apache.spark:spark-sql_2.11:2.4.4'
-    compile group: 'org.scala-lang', name: 'scala-library', version: '2.11.11'
+    compile 'org.apache.spark:spark-sql_2.12:3.0.1'
+    //compile group: 'org.apache.spark', name: 'spark-kubernetes_2.11', version: '2.4.6'
     compile group: 'postgresql', name: 'postgresql', version: '9.1-901-1.jdbc4'
 }
 
