@@ -18,3 +18,5 @@ src/main/resources/data
 /build
 /gradle
 /.gradle
+.DS_Store
+/.bsp/sbt.json

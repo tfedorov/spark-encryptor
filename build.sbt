@@ -5,12 +5,12 @@ name := "spark_encryptor"
 
 version := "0.1"
 
-scalaVersion := "2.11.8"
+scalaVersion := "2.12.3"
 
-val sparkLocal = sys.env.getOrElse("SPARK_LOCAL", "false")
+val sparkExcludeLibs = sys.env.getOrElse("SPARK_EXCLUDE_LIBS", "false")
 
-val sparkDependencies: Seq[ModuleID] = sparkLocal match {
-  case "false" =>
+val sparkDependencies: Seq[ModuleID] = sparkExcludeLibs match {
+  case "true" =>
     Seq("org.apache.spark" %% "spark-core" % "2.4.4" % "provided",
       "org.apache.spark" %% "spark-sql" % "2.4.4" % "provided")
 
@@ -21,11 +21,13 @@ val sparkDependencies: Seq[ModuleID] = sparkLocal match {
 }
 
 libraryDependencies ++= sparkDependencies
+libraryDependencies += "org.postgresql" % "postgresql" % "9.2-1002-jdbc4"
 
 assemblyMergeStrategy in assembly := {
   case PathList("META-INF", xs@_*) => MergeStrategy.discard
   case _ => MergeStrategy.first
 }
+
 
 lazy val manifestSettings = Seq(
   packageOptions in(Compile, packageBin) +=

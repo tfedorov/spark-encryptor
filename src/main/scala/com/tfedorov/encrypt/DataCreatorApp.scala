@@ -12,7 +12,7 @@ object DataCreatorApp extends App with Logging {
   log.warn("*******Start*******")
   private val targetPath = args.headOption
 
-  log.warn(FilesUtils.manifestMF)
+  log.warn(FilesUtils.readAssemblyManifest())
   private val session = SparkSession.builder.master("local")
     .appName(this.getClass.getCanonicalName)
     .getOrCreate()

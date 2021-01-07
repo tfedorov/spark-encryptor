@@ -1,18 +1,28 @@
 package com.tfedorov.utils
 
-import java.io.InputStream
-
-import scala.io.Source
+import java.util.jar.{JarFile, Manifest}
+import scala.collection.JavaConverters._
 
 object FilesUtils {
 
-  def manifestMF: String = {
-    val manifestPath = getClass().getClassLoader().getResource("META-INF/MANIFEST.MF")
-    if (manifestPath == null)
-      return "'META-INF/MANIFEST.MF' not found"
-    val manifestResource: InputStream = getClass().getClassLoader().getResourceAsStream("META-INF/MANIFEST.MF")
-    val manifestText = Source.fromInputStream(manifestResource, "UTF-8").mkString
-    s"\n$manifestPath :\n" + manifestText
+  def readAssemblyManifest(): String = {
+    readManifest(jarFragment = "assembly").getOrElse("no assembly manifest")
   }
 
+  private def readManifest(jarFragment: String): Option[String] = {
+    val manifests = Thread.currentThread.getContextClassLoader.getResources(JarFile.MANIFEST_NAME).asScala.toSeq
+    val foundedJars = manifests.filter(_.getPath.contains(jarFragment))
+    if (foundedJars.isEmpty)
+      return None
+
+    val manifestContent = new StringBuilder()
+    foundedJars.foreach { url =>
+      val manifest = new Manifest(url.openStream())
+      manifestContent.append("File:" + url.getPath + "\n")
+      manifest.getMainAttributes.asScala.foreach { atribute =>
+        manifestContent.append(atribute._1 + "," + atribute._2 + "\n")
+      }
+    }
+    Some(manifestContent.mkString)
+  }
 }
