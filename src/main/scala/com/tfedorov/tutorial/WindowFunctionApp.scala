@@ -1,4 +1,4 @@
-package com.tfedorov
+package com.tfedorov.tutorial
 
 import org.apache.spark.sql.{Dataset, SparkSession}
 

@@ -3,7 +3,7 @@ package com.tfedorov
 
 import org.apache.spark.sql.SparkSession
 
-object TablesApp extends App {
+object ShowTablesApp extends App {
 
   private val session: SparkSession = SparkSession.builder.master("local")
     .appName(this.getClass.getCanonicalName)

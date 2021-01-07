@@ -3,6 +3,8 @@ package com.tfedorov
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.expressions.Window
 
+import org.apache.spark.sql.functions._
+
 object ComparisonToolApp extends App {
 
   private val spark =
@@ -10,15 +12,12 @@ object ComparisonToolApp extends App {
       .appName(this.getClass.getCanonicalName)
       .getOrCreate()
 
-  import org.apache.spark.sql.functions._
   import spark.sqlContext.implicits._
 
   private val originalDS = spark.read.option("header", "true").option("inferschema", "true")
     .csv("src/main/resources/compar/table1.csv")
 
   originalDS.printSchema()
-  //originalDS.show()
-  //originalDS.groupBy($"zip_code").agg(max("customer_id")).show
 
   private val part = Window.partitionBy($"id")
   private val resultDF = originalDS.withColumn("number", count("*").over(part))

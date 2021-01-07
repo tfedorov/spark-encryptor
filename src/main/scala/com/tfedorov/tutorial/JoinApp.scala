@@ -1,8 +1,7 @@
-package com.tfedorov
+package com.tfedorov.tutorial
 
 import com.tfedorov.utils.FilesUtils
 import org.apache.spark.sql.SparkSession
-//import org.apache.spark.util.SizeEstimator
 
 object JoinApp extends App {
 
