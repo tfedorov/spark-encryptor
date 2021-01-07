@@ -21,22 +21,42 @@ object ComparisonToolApp extends App {
   //originalDS.groupBy($"zip_code").agg(max("customer_id")).show
 
   private val part = Window.partitionBy($"id")
-  private val result = originalDS.withColumn("number", count("*").over(part))
+  private val resultDF = originalDS.withColumn("number", count("*").over(part))
     //.filter($"number" === 2)
-    .withColumn("diff", collect_set("val1").over(part))
+    .withColumn("diff", collect_set("val2").over(part))
     .withColumn("different", size($"diff"))
     .withColumn("status",
       when($"number" === 1, "no enough rows")
         .otherwise(
           when($"number" === 2 && $"different" === 1, "equal")
             .otherwise(
-              when($"number" === 2 && $"different" === 2, "not equal").otherwise("extra rows"))
+              when($"number" === 2 && $"different" === 2, "not equal")
+                .otherwise("extra rows"))
         )
     )
 
-  result.show()
-  result.explain(true)
+  resultDF.show()
+  //resultDF.explain(true)
 
-  originalDS.createTempView("union")
-  spark.sql("S")
+  originalDS.createTempView("table1")
+  val compareSql =
+    """SELECT
+      |  *,
+      |  count(*) OVER (PARTITION BY id) as number,
+      |  collect_set(val2) OVER (PARTITION BY id) as diff,
+      |  size(collect_set(val2) OVER (PARTITION BY id)) as different
+      |FROM
+      |  table1""".stripMargin
+  val compareDF = spark.sql(compareSql)
+  compareDF.createTempView("compare")
+
+  val statusSql =
+    """SELECT
+      |  *,
+      |  CASE WHEN number = 1 THEN 'no enough rows' WHEN number = 2 AND different =1 THEN 'equal' WHEN number = 2 AND different =2 THEN 'not equal' ELSE 'extra rows' END AS status
+      |FROM
+      |  compare""".stripMargin
+
+  spark.sql(statusSql).show
+
 }
