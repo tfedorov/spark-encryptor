@@ -22,6 +22,7 @@ val sparkDependencies: Seq[ModuleID] = sparkExcludeLibs match {
 
 libraryDependencies ++= sparkDependencies
 libraryDependencies += "org.postgresql" % "postgresql" % "9.2-1002-jdbc4"
+libraryDependencies += "org.junit.jupiter" % "junit-jupiter-api" % "5.7.0-RC1" % Test
 
 assemblyMergeStrategy in assembly := {
   case PathList("META-INF", xs@_*) => MergeStrategy.discard
