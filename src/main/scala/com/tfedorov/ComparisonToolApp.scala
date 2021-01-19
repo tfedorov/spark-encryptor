@@ -17,13 +17,11 @@ object ComparisonToolApp extends App {
   private val originalDS = spark.read.option("header", "true").option("inferschema", "true")
     .csv("src/main/resources/compar/table1.csv")
 
-  originalDS.printSchema()
 
   private val part = Window.partitionBy($"id")
   private val resultDF = originalDS.withColumn("number", count("*").over(part))
     //.filter($"number" === 2)
-    .withColumn("diff", collect_set("val2").over(part))
-    .withColumn("different", size($"diff"))
+    .withColumn("different", size(collect_set("val2").over(part)))
     .withColumn("status",
       when($"number" === 1, "no enough rows")
         .otherwise(
@@ -42,7 +40,6 @@ object ComparisonToolApp extends App {
     """SELECT
       |  *,
       |  count(*) OVER (PARTITION BY id) as number,
-      |  collect_set(val2) OVER (PARTITION BY id) as diff,
       |  size(collect_set(val2) OVER (PARTITION BY id)) as different
       |FROM
       |  table1""".stripMargin

@@ -15,7 +15,7 @@ object WindowFunctionApp extends App {
 
   import spark.implicits._
 
-  private val valueses = Seq(
+  private val values = Seq(
     Values("Lviv", "John", 7),
     Values("Lviv", "John", 5),
     Values("Lviv", "Petro", 85),
@@ -26,7 +26,7 @@ object WindowFunctionApp extends App {
     Values("Kyiv", "Ivan", 1)
   )
 
-  private val valuesDS: Dataset[Values] = spark.createDataset(valueses)
+  private val valuesDS: Dataset[Values] = spark.createDataset(values)
 
   valuesDS.createTempView("vals")
 
@@ -34,13 +34,19 @@ object WindowFunctionApp extends App {
   import org.apache.spark.sql.functions._
 
   //val actualDS = spark.sql("SELECT * FROM (SELECT *, rank() OVER (PARTITION BY city ORDER BY values DESC) AS rank FROM vals) WHERE rank < 3")
-  private val byBucket = Window.partitionBy('city, 'name).orderBy('values)
-  private val dslResult = valuesDS
-    .withColumn("rank", rank().over(byBucket)) //.filter($"rank" < 3)
-  dslResult.show
-  dslResult.explain(true)
-  //actualDS.show
-  //actualDS.explain(true)
+  private val byBucket = Window.partitionBy('city).orderBy('values)
+  valuesDS.withColumn("mean", avg("values").over(byBucket)).show
 
-  StdIn.readLine()
+  //valuesDS.withColumn("rank", rank().over(byBucket)).show //.filter($"rank" < 3)
+  valuesDS.repartition(4, $"city").rdd.foreachPartition { i =>
+    println("*****")
+    i.foreach(print)
+  }
+
+  val numParts = 4 // the number of partitions
+  val partExprs = Seq($"city")
+
+  val partitionIdExpression = pmod(hash(partExprs: _*), lit(numParts))
+  val q = valuesDS.withColumn("partitionId", partitionIdExpression)
+  q.show
 }
