@@ -11,13 +11,16 @@ val sparkExcludeLibs = sys.env.getOrElse("SPARK_EXCLUDE_LIBS", "false")
 
 val sparkDependencies: Seq[ModuleID] = sparkExcludeLibs match {
   case "true" =>
-    Seq("org.apache.spark" %% "spark-core" % "2.4.4" % "provided",
-      "org.apache.spark" %% "spark-sql" % "2.4.4" % "provided")
+    Seq("org.apache.spark" %% "spark-core" % "3.0.1" % "provided",
+      "org.apache.spark" %% "spark-sql" % "3.0.1" % "provided",
+      "org.apache.spark" %% "spark-streaming" % "3.0.1" % "provided",
+      "org.apache.spark" %% "spark-streaming-kafka-0-10" % "3.0.1" % "provided")
 
   case _ =>
-    Seq("org.apache.spark" %% "spark-core" % "2.4.4",
-      "org.apache.spark" %% "spark-sql" % "2.4.4")
-
+    Seq("org.apache.spark" %% "spark-core" % "3.0.1",
+      "org.apache.spark" %% "spark-sql" % "3.0.1",
+      "org.apache.spark" %% "spark-streaming" % "3.0.1" ,
+      "org.apache.spark" %% "spark-streaming-kafka-0-10" % "3.0.1")
 }
 
 libraryDependencies ++= sparkDependencies
