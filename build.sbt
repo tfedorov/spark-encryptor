@@ -7,8 +7,9 @@ version := "0.1"
 
 scalaVersion := "2.12.3"
 
-val sparkExcludeLibs = sys.env.getOrElse("SPARK_EXCLUDE_LIBS", "false")
+resolvers += "Confluent" at "https://packages.confluent.io/maven"
 
+val sparkExcludeLibs = sys.env.getOrElse("SPARK_EXCLUDE_LIBS", "false")
 val sparkDependencies: Seq[ModuleID] = sparkExcludeLibs match {
   case "true" =>
     Seq("org.apache.spark" %% "spark-core" % "3.0.1" % "provided",
@@ -23,6 +24,7 @@ val sparkDependencies: Seq[ModuleID] = sparkExcludeLibs match {
       "org.apache.spark" %% "spark-streaming-kafka-0-10" % "3.0.1")
 }
 
+libraryDependencies += "io.confluent" % "kafka-avro-serializer" % "5.3.0"
 libraryDependencies ++= sparkDependencies
 libraryDependencies += "org.postgresql" % "postgresql" % "9.2-1002-jdbc4"
 libraryDependencies += "org.junit.jupiter" % "junit-jupiter-api" % "5.7.0-RC1" % Test
